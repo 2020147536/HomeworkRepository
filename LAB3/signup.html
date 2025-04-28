@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <title>SignUp Page</title>
+    </head>
+    
+    <body>
+        <h1>Welcome to INTERNET-PROGRAMMING MOVIE SITE</h1>
+        <p>
+            <a href="index.html">메인페이지</a>
+            <a href="login.html">로그인</a>
+            회원가입
+        </p>
+        <form method="POST" action="#" autocomplete="on">
+            <p>
+                <label>이름:
+                <input name = "name" type = "text" autofocus>
+            </label>
+            </p>
+            <p>
+                <label>생일:
+                <input name = "date" type = "date">
+            </label>
+            </p>
+            <p>
+                성별:
+                <label><input name = "sex" type = "radio">남성</label>
+                <label><input name = "sex" type = "radio">여성</label>
+            </p>
+            <p>
+                <label>학년:
+                    <input name = "grade" type = "number" min = "1" max = "4" step = "1" value = "1">
+                </label>
+            </p>
+            <p>
+                <label>아이디:
+                    <input name = "id" type = "text">
+                </label>
+            </p>
+            <p>
+                <label>비밀번호:
+                    <input name = "password" type = "password">
+                </label>
+            </p>
+            <p>
+                <label>이메일:
+                    <input name = "email" type = "email" placeholder = "example@naver.com">
+                </label>
+            </p>
+            <p>
+                <label>전화번호:
+                    <input name = "tel" type = "tel" pattern = "\d{3}-\d{4}-\d{4}" required>
+                </label>
+            </p>
+            <p>
+                <label>보안 질문:
+                    <select name = "question">
+                        <option value = "default">질문을 선택하세요</option>
+                        <option value = "좋아하는 캐릭터 이름은?">좋아하는 캐릭터 이름은?</option>
+                        <option value = "출신 초등학교는?">출신 초등학교는?</option>
+                        <option value = "어머니 성함은?">어머니 성함은?</option>
+                        <option value = "가장 친한 친구 이름은?">가장 친한 친구 이름은?</option>
+                    </select>
+                </label>
+            </p>
+            <p>
+                <label>답변:
+                    <input name = "answer" type = "text" autocomplete="off">
+                </label>
+            </p>
+            <p>
+                <input type = "submit" value = "Submit">
+                <input type = "reset" value = "Clear">
+            </p>
+        </form>
+    </body>
+</html>
