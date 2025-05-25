@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <title>Main Page</title>
+</head>
+    
+<body>
+  <h1 class="title">Welcome to INTERNET-PROGRAMMING MOVIE SITE</h1>
+  <p class="nav">
+    메인페이지
+    <a href="login.html">로그인</a>
+    <a href="signup.html">회원가입</a>
+  </p>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="영화 제목 검색..." />
+    <select id="sortSelect">
+      <option value="titleup">제목오름차순</option>
+      <option value="titledown">제목내림차순</option>
+      <option value="ratingup">평점높은순</option>
+      <option value="ratingdown">평점낮은순</option>
+    </select>
+  </div>
+
+  <div id="movieList"></div>
+
+  <template id="movieTemplate">
+    <div class="movie-card">
+      <div class="image-container">
+        <img alt="poster" width="100" height="140"/>
+        <div class="overlay-text"></div>
+      </div>  
+      <div class="movie-title"></div>
+      <div class="movie-rating"></div>
+      <div class="movie-date"></div>
+    </div>
+  </template>
+
+  <script>
+    let allMovies = [];
+    let filteredMovies = [];
+    let index = 0;
+    const batchSize = 4;
+
+    const movieList = document.getElementById("movieList");
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sortSelect");
+
+    function renderNextBatch() {
+      const fragment = document.createDocumentFragment();
+      for (let i = index; i < index + batchSize && i < filteredMovies.length; i++) {
+        const movie = filteredMovies[i];
+        const template = document.getElementById("movieTemplate").content.cloneNode(true);
+        const container = template.querySelector(".image-container");
+        const img = container.querySelector("img");
+        img.src = "img/" + movie.poster;
+        img.alt = movie.title;
+        const overlay = container.querySelector(".overlay-text");
+        overlay.textContent = movie.description;
+        overlay.style.display = "none";
+        template.querySelector(".movie-title").textContent = movie.title;
+        template.querySelector(".movie-rating").textContent = `평점: ${movie.rating}`;
+        template.querySelector(".movie-date").textContent = movie.release_date;
+        fragment.appendChild(template);
+
+        // hover
+        container.addEventListener("mouseenter", () => {
+          overlay.style.display = "block";
+          img.style.filter = "blur(3px) brightness(0.6)";
+        });
+        container.addEventListener("mouseleave", () => {
+          overlay.style.display = "none";
+          img.style.filter = "none";
+        });
+      }
+      index += batchSize;
+      movieList.appendChild(fragment);
+
+      if (document.body.scrollHeight <= window.innerHeight && index < filteredMovies.length) {
+        renderNextBatch();
+      }
+    }
+
+    window.onscroll = () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        renderNextBatch();
+      }
+    };
+    
+    function updateMovies() {
+      const keyword = searchInput.value.toLowerCase();
+      const sortBy = sortSelect.value;
+
+      filteredMovies = allMovies.filter(movie =>
+        movie.title.toLowerCase().includes(keyword)
+      );
+
+      if (sortBy === "titleup") {
+        filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sortBy === "titledown") {
+        filteredMovies.sort((a, b) => b.title.localeCompare(a.title));
+      } else if (sortBy === "ratingup") {
+        filteredMovies.sort((a, b) => b.rating - a.rating);
+      } else if (sortBy === "ratingdown") {
+        filteredMovies.sort((a, b) => a.rating - b.rating);
+      }
+
+      index = 0;
+      movieList.innerHTML = "";
+      renderNextBatch();
+    }
+
+    searchInput.addEventListener("input", updateMovies);
+    sortSelect.addEventListener("change", updateMovies);
+
+    fetch("product.json")
+      .then(res => res.json())
+      .then(data => {
+        allMovies = data;
+        updateMovies();
+      })
+      .catch(err => console.error("데이터 로딩 실패", err));
+  </script>
+</body>
+</html>
